@@ -11,3 +11,8 @@ This code makes use of my [Custom Java API](https://github.com/Dyndrilliac/java-
 
 This repository contains all of the code that was written for the programming project assigned in COT 3210. The application demonstrates a class that provides a graphical display to the user showing a simulation of an initial infection vector spreading through a population operating under certain fundamental rules.
 
+The grid contains squares, each of which can have one of three states: Alive, Empty, or Infected. Alive squares are green, Empty squares are black, and Infected squares are red. There are five buttons above the grid which are used to control the simulation. The button 'Initialize' clears out all of the grid data from memory and creates a new grid with all squares set to the Empty state. The button 'Randomize' creates a random distribution of Empty/Alive squares.
+
+The three 'Iterate' buttons run the simulation. Iterations can be executed one at a time (single stepping) or multiple times in rapid succession. When you activate one of these buttons, a dialogue box will ask you how many iterations you want to execute.
+
+For more information, please see the original project instructions available [here](http://www.unf.edu/~wkloster/3210/prog.txt).
