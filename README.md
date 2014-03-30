@@ -16,3 +16,5 @@ The grid contains squares, each of which can have one of three states: Alive, Em
 The three 'Iterate' buttons run the simulation. Iterations can be executed one at a time (single stepping) or multiple times in rapid succession. When you activate one of these buttons, a dialogue box will ask you how many iterations you want to execute.
 
 For more information, please see the original project instructions available [here](http://www.unf.edu/~wkloster/3210/prog.txt).
+
+A pre-compiled JAR binary can be downloaded from [this link](https://www.dropbox.com/s/8ttgqf24izo08yq/COT3210Project_N00868808_MBoyette.jar).
