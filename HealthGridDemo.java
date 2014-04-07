@@ -1,14 +1,16 @@
 /*
-	Title:  COT 3210 Programming Project
+	Title:  Health Grid Demo (COT 3210 Programming Project)
 	Author: Matthew Boyette
 	Date:   3/22/2014
-	
+
 	This application demonstrates a class that provides a graphical display to the user that shows a simulation of an infection spreading through
 	a population operating under certain fundamental rules.
 */
 
-import api.gui.*;
-import api.util.*;
+import api.gui.ApplicationWindow;
+import api.gui.HealthGrid;
+import api.util.EventHandler;
+import api.util.Support;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -22,20 +24,24 @@ import javax.swing.JPanel;
 
 public class HealthGridDemo
 {
-	private static boolean		debugMode	= false;
-	private static HealthGrid	grid		= null;
-	private static int			iterations	= 1;
-	
 	public static final void main(final String[] args)
 	{
-		ApplicationWindow mainWindow = null;
-		int               choice     = Support.promptDebugMode(mainWindow);
-		
-		debugMode = (choice == JOptionPane.YES_OPTION);
+		new HealthGridDemo();
+	}
+	
+	private boolean				debugging	= false;
+	private HealthGrid			grid		= null;
+	private int					iterations	= 1;
+	private ApplicationWindow	window		= null;
+	
+	public HealthGridDemo()
+	{
+		this.setDebugging((Support.promptDebugMode(this.getWindow()) == JOptionPane.YES_OPTION));
 		
 		// Define a self-contained ActionListener event handler.
-		EventHandler myActionPerformed = new EventHandler()
+		EventHandler myActionPerformed = new EventHandler(this)
 		{
+			@Override
 			public final void run(final Object... arguments) throws IllegalArgumentException
 			{
 				if ((arguments.length <= 1) || (arguments.length > 2))
@@ -51,8 +57,9 @@ public class HealthGridDemo
 					throw new IllegalArgumentException("myActionPerformed Error : argument[1] is of incorrect type.");
 				}
 				
-				ActionEvent			event  = (ActionEvent)arguments[0];
-				ApplicationWindow	window = (ApplicationWindow)arguments[1];
+				ActionEvent			event	= (ActionEvent)arguments[0];
+				HealthGridDemo		parent	= ((HealthGridDemo)this.parent);
+				ApplicationWindow	window	= (ApplicationWindow)arguments[1];
 				
 				/*
 					JDK 7 allows string objects as the expression in a switch statement.
@@ -63,41 +70,43 @@ public class HealthGridDemo
 				{
 					case "Initialize":
 						
-						HealthGridDemo.iterations = 1;
-						HealthGridDemo.grid.initializeConfiguration();
-						window.setTitle("Health Grid Application - Iteration: " + HealthGridDemo.iterations);
+						parent.setIterations(1);
+						parent.getGrid().initializeConfiguration();
+						window.setTitle("Health Grid Application - Iteration: " + parent.getIterations());
 						break;
-						
+					
 					case "Iterate A":
 					case "Iterate B":
 					case "Iterate C":
 						
 						final int NUM_ITERATIONS = Support.getIntegerInputString(window, "How many iterations?", "Number of Iterations");
-						for (int i = 0; i < NUM_ITERATIONS; i++, HealthGridDemo.iterations++)
+						
+						for (int i = 0; i < NUM_ITERATIONS; i++)
 						{
-							HealthGridDemo.grid.iterateConfiguration(event.getActionCommand());
+							parent.getGrid().iterateConfiguration(event.getActionCommand());
 							
-							if ((HealthGridDemo.iterations % 1000) == 0)
+							if ((parent.getIterations() % 1000) == 0)
 							{
-								if (HealthGridDemo.debugMode)
+								if (parent.isDebugging())
 								{
-									Support.displayDebugMessage(window, "Infection.\n");
+									Support.displayDebugMessage(window, "Infection (" + (parent.getIterations() / 1000) + ")\n");
 								}
 								
-								HealthGridDemo.grid.injectInfection();
+								parent.getGrid().injectInfection();
 							}
 							
-							window.setTitle("Health Grid Application - Iteration: " + HealthGridDemo.iterations);
+							parent.setIterations(parent.getIterations() + 1);
+							window.setTitle("Health Grid Application - Iteration: " + parent.getIterations());
 						}
 						break;
-						
+					
 					case "Randomize":
 						
-						HealthGridDemo.iterations = 1;
-						HealthGridDemo.grid.randomizeConfiguration();
-						window.setTitle("Health Grid Application - Iteration: " + HealthGridDemo.iterations);
+						parent.setIterations(1);
+						parent.getGrid().randomizeConfiguration();
+						window.setTitle("Health Grid Application - Iteration: " + parent.getIterations());
 						break;
-						
+					
 					default:
 						
 						break;
@@ -106,8 +115,9 @@ public class HealthGridDemo
 		};
 		
 		// Define a self-contained interface construction event handler.
-		EventHandler myDrawGUI = new EventHandler()
+		EventHandler myDrawGUI = new EventHandler(this)
 		{
+			@Override
 			public final void run(final Object... arguments) throws IllegalArgumentException
 			{
 				if (arguments.length <= 0)
@@ -127,11 +137,12 @@ public class HealthGridDemo
 				JButton				iterateA	= new JButton("Iterate A");
 				JButton				iterateB	= new JButton("Iterate B");
 				JButton				iterateC	= new JButton("Iterate C");
+				HealthGridDemo		parent		= ((HealthGridDemo)this.parent);
 				JButton				randomize	= new JButton("Randomize");
 				
 				final int rows = Support.getIntegerInputString(window, "How many rows?", "Number of Rows");
 				final int cols = Support.getIntegerInputString(window, "How many columns?", "Number of Columns");
-				HealthGridDemo.grid = new HealthGrid(rows,cols);
+				parent.setGrid(new HealthGrid(rows, cols));
 				
 				buttonPanel.setLayout(new FlowLayout());
 				buttonPanel.add(initialize);
@@ -140,7 +151,7 @@ public class HealthGridDemo
 				buttonPanel.add(iterateC);
 				buttonPanel.add(randomize);
 				gridPanel.setLayout(new FlowLayout());
-				gridPanel.add(HealthGridDemo.grid);
+				gridPanel.add(parent.getGrid());
 				contentPane.setLayout(new BorderLayout());
 				contentPane.add(buttonPanel, BorderLayout.NORTH);
 				contentPane.add(gridPanel, BorderLayout.CENTER);
@@ -152,8 +163,48 @@ public class HealthGridDemo
 			}
 		};
 		
-		mainWindow = new ApplicationWindow(null, "Health Grid Application - Iteration: " + HealthGridDemo.iterations, new Dimension(640, 480), debugMode, false, 
-			myActionPerformed, myDrawGUI);
-		mainWindow.pack();
+		this.setWindow(new ApplicationWindow(null, "Health Grid Application - Iteration: " + this.getIterations(), new Dimension(640, 480), this.isDebugging(), false,
+			myActionPerformed, myDrawGUI));
+		this.getWindow().pack();
+	}
+	
+	public final HealthGrid getGrid()
+	{
+		return this.grid;
+	}
+	
+	public final int getIterations()
+	{
+		return this.iterations;
+	}
+	
+	public final ApplicationWindow getWindow()
+	{
+		return this.window;
+	}
+	
+	public final boolean isDebugging()
+	{
+		return this.debugging;
+	}
+	
+	public final void setDebugging(final boolean debugging)
+	{
+		this.debugging = debugging;
+	}
+	
+	public final void setGrid(final HealthGrid grid)
+	{
+		this.grid = grid;
+	}
+	
+	public final void setIterations(final int iterations)
+	{
+		this.iterations = iterations;
+	}
+	
+	public final void setWindow(final ApplicationWindow window)
+	{
+		this.window = window;
 	}
 }
