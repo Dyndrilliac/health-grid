@@ -19,7 +19,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class HealthGridDemo
@@ -36,7 +35,7 @@ public class HealthGridDemo
 	
 	public HealthGridDemo()
 	{
-		this.setDebugging((Support.promptDebugMode(this.getWindow()) == JOptionPane.YES_OPTION));
+		this.setDebugging(Support.promptDebugMode(this.getWindow()));
 		
 		// Define a self-contained ActionListener event handler.
 		EventHandler myActionPerformed = new EventHandler(this)
