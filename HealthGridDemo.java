@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 
 public class HealthGridDemo
 {
-	public static final void main(final String[] args)
+	public final static void main(final String[] args)
 	{
 		new HealthGridDemo();
 	}
