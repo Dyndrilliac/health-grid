@@ -17,8 +17,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import api.gui.ApplicationWindow;
-import api.gui.HealthGrid;
+import api.gui.draw.HealthGrid;
+import api.gui.swing.ApplicationWindow;
 import api.util.EventHandler;
 import api.util.Support;
 
