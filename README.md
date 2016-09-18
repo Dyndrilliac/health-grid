@@ -1,6 +1,6 @@
 *******************************************************************
 
-* Title:     Health Grid
+* Title:     Health Grid (COT 3210 Programming Project)
 * Author:    [Matthew Boyette](mailto:Dyndrilliac@gmail.com)
 * Professor: Dr. William 'Chip' Klostermeyer
 * Term:      Spring 2014
