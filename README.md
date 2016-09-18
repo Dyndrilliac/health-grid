@@ -1,6 +1,6 @@
 *******************************************************************
 
-* Title:     Health Grid (COT 3210 Programming Project)
+* Title:     Health Grid
 * Author:    [Matthew Boyette](mailto:Dyndrilliac@gmail.com)
 * Class:     Computability Theory & Automata (COT 3210)
 * Professor: Dr. William 'Chip' Klostermeyer
